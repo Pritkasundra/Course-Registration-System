@@ -53,4 +53,9 @@ public class Enrollment {
     public boolean isActive() {
         return this.status == EnrollmentStatus.ACTIVE;
     }
+
+    public Enrollment(Student student, Course course) {
+        this.student = student;
+        this.course = course;
+    }
 }
