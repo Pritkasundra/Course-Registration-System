@@ -50,11 +50,26 @@ public class Grade {
     @Column(nullable = false)
     private LocalDateTime gradedAt;
 
+    //parametric constructor
+    public Grade(Student student, Course course, LetterGrade letterGrade, String semester) {
+        this.student = student;
+        this.course = course;
+        this.letterGrade = letterGrade;
+        this.semester = semester;
+    }
+
+
     // Before storing grade in DB it will convert letterGrade into gradePoints
     // and record grade submission time.
     @PrePersist
     public void prePersist() {
         this.gradedAt = LocalDateTime.now();
+        this.gradePoints = calculateGradePoints(this.letterGrade);
+    }
+
+    // runs automatically before update
+    @PreUpdate
+    public void preUpdate() {
         this.gradePoints = calculateGradePoints(this.letterGrade);
     }
 
