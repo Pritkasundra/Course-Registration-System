@@ -35,4 +35,10 @@ public interface GradeRepository extends JpaRepository<Grade,Long> {
     // get all grades of a student to recalculate CGPA
     @Query("SELECT g FROM Grade g WHERE g.student.id = :studentId")
     List<Grade> findAllGradesByStudentId(@Param("studentId") Long studentId);
+
+    //if Professor want then he can update the grade of student
+    @Modifying
+    @Transactional
+    @Query("UPDATE Grade g SET g.letterGrade = :letterGrade " + "WHERE g.student.id = :studentId AND g.course.id = :courseId")
+    void updateGrade(@Param("studentId") Long studentId, @Param("courseId") Long courseId, @Param("letterGrade") LetterGrade letterGrade);
 }
