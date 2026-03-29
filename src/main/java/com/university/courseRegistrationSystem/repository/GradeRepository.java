@@ -26,8 +26,13 @@ public interface GradeRepository extends JpaRepository<Grade,Long> {
     // to get specific subject grade for student
     Optional<Grade> findByStudentIdAndCourseId(Long studentId, Long courseId);
 
+    // update existing grade
     @Modifying
     @Transactional
     @Query("UPDATE Grade g SET g.letterGrade = :letterGrade WHERE g.student.id = :studentId AND g.course.id = :courseId")
     void assignGrade(@Param("studentId") Long studentId,@Param("courseId") Long courseId,@Param("letterGrade") LetterGrade letterGrade);
+
+    // get all grades of a student to recalculate CGPA
+    @Query("SELECT g FROM Grade g WHERE g.student.id = :studentId")
+    List<Grade> findAllGradesByStudentId(@Param("studentId") Long studentId);
 }
