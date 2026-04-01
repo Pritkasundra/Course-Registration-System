@@ -18,9 +18,7 @@ public class ApplicationConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return customUserDetailsService;
-    }
+    public UserDetailsService userDetailsService() {return customUserDetailsService;}
 
     @Bean
     public PasswordEncoder passwordEncoder(){
