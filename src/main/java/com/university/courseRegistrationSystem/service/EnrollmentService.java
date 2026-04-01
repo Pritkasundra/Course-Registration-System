@@ -11,7 +11,7 @@ import com.university.courseRegistrationSystem.model.Student;
 import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.EnrollmentRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,16 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EnrollmentService {
 
-    //This annotation is used to automatically include the needed dependency
-    @Autowired
     private EnrollmentRepository enrollmentRepository;
-
-    @Autowired
     private StudentRepository studentRepository;
-
-    @Autowired
     private CourseRepository courseRepository;
 
     //REGISTER FOR COURSE
