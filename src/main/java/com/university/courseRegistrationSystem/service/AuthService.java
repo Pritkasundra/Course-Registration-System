@@ -8,28 +8,24 @@ import com.university.courseRegistrationSystem.security.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request){
-        if(request.getUsername() == null || request.getPassword() == null){
-            throw new RuntimeException("Invalid Username or Password");
-        }
 
-        authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()));
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(()->new RuntimeException("User Not Found"));
+        User user = (User) authentication.getPrincipal();
 
         String token = jwtService.generateToken(user);
 
