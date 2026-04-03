@@ -26,6 +26,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     Optional<Enrollment> findByStudentIdAndCourseId(Long studentId,Long courseId);
 
     // professor views all active students in their course
-    @Query("SELECT e FROM Enrollment e WHERE e.course.id = :courseID AND e.course.professor.id= :professrId AND e.status = 'ACTIVE'")
+    @Query("SELECT e FROM Enrollment e WHERE e.course.id = :courseId AND e.course.professor.id= :professorId AND e.status = 'ACTIVE'")
     List <Enrollment> findByProfessorIdAndCourseId(@Param("courseId") Long courseId , @Param("professorId") Long professorId);
 }

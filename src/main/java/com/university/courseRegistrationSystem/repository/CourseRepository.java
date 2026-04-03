@@ -57,7 +57,7 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE Course c SET c.professor = :professor WHERE c.code = :code")
-    void updateCreditHours(@Param("code") String code,@Param("professor") Professor professor);
+    void updateProfessor(@Param("code") String code,@Param("professor") Professor professor);
 
 
 }
