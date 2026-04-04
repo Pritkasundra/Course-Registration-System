@@ -42,7 +42,6 @@ public class Grade {
     @Column(precision = 3, scale = 2, nullable = false)
     private BigDecimal gradePoints;
 
-
     @Column(nullable = false)
     private String semester;
 

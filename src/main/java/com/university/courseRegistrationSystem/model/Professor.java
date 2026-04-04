@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Professor {
     @Id
+    @Column(name = "professor_id", unique = true, nullable = false)
     private Long id;
 
     @Column(nullable = false)
