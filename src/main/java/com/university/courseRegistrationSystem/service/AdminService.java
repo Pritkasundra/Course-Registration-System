@@ -66,7 +66,7 @@ public class AdminService {
 
         courseRepository.save(course);
 
-        return "Seats updated successfully for course code: " + code;
+        return ResponseEntity.ok("Seats updated successfully for course code: " + code);
     }
 
     @Transactional
