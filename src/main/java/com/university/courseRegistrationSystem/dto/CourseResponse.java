@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 
-public class CourseResponse {
+public class CourseResponse{
     private Long id;
     private String name;
     private String code;
