@@ -48,30 +48,32 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseEntity<String> updateSeatMatrix(UpdateSeatMatrixRequest request) {
+    public ResponseEntity<String> updateSeatMatrix(String code, int seats) {
 
-        Course course = courseRepository.findByCode(request.getCode()).orElseThrow(() -> new RuntimeException("Course no found with code :" + request.getCode()));
+        Course course = courseRepository.findByCode(code)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
 
         int enrolledCount = course.getTotalSeats() - course.getAvailableSeats();
 
-        if (request.getNewTotalSeats() < enrolledCount) {
-            throw new RuntimeException("Cannot reduce seats to " + request.getNewTotalSeats() + ". Already " + enrolledCount + " students enrolled");
+        if (seats < enrolledCount) {
+            throw new RuntimeException("Cannot reduce seats below enrolled count");
         }
-        int newAvailableSeats = request.getNewTotalSeats() - enrolledCount;
+
+        int newAvailableSeats = seats - enrolledCount;
 
         course.setAvailableSeats(newAvailableSeats);
-        course.setTotalSeats(request.getNewTotalSeats());
+        course.setTotalSeats(seats);
 
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Seats updated successfully for course code : " + course.getCode());
+        return "Seats updated successfully for course code: " + code;
     }
 
     @Transactional
-    public ResponseEntity<String> updateProfessorForCourse(UpdateProfessorForCourseRequest request) {
+    public ResponseEntity<String> updateProfessorForCourse(String code,String professorEmail) {
 
-        Course course = courseRepository.findByCode(request.getCode()).orElseThrow(() -> new RuntimeException("Course no found with code :" + request.getCode()));
-        Professor professor = professorRepository.findByEmail(request.getProfessorEmail()).orElseThrow(() -> new RuntimeException("Professor not found with email : " + request.getProfessorEmail()));
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course no found with code :" + code));
+        Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new RuntimeException("Professor not found with email : " + professorEmail));
         course.setProfessor(professor);
         courseRepository.save(course);
         return ResponseEntity.ok("Professor updated successfully for course code : " + course.getCode());
@@ -79,10 +81,10 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseEntity<String>  updateCoreStatus(UpdateCoreStatusRequest request) {
+    public ResponseEntity<String>  updateCoreStatus(String code, boolean isCoreFlag) {
 
-        Course course = courseRepository.findByCode(request.getCode()).orElseThrow(() -> new RuntimeException("Course not found: " + request.getCode()));
-        course.setCoreFlag(request.isCoreFlag());
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found: " + code));
+        course.setCoreFlag(isCoreFlag);
         courseRepository.save(course);
 
         return ResponseEntity.ok("Course updated successfully");
@@ -90,13 +92,13 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseEntity<String> updateCreditHours(UpdateCreditHoursRequest request) {
+    public ResponseEntity<String> updateCreditHours(String code,int  creditHours) {
 
-        if (request.getCreditHours() <= 0) {
+        if (creditHours <= 0) {
             throw new RuntimeException("Credit hours must be greater than 0");
         }
-        Course course = courseRepository.findByCode(request.getCode()).orElseThrow(() -> new RuntimeException("Course not found: " + request.getCode()));
-        course.setCreditHours(request.getCreditHours());
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found: " + code));
+        course.setCreditHours(creditHours);
         courseRepository.save(course);
         return ResponseEntity.ok("Credit hours updated successfully");
 
