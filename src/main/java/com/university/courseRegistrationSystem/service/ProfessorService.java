@@ -3,7 +3,6 @@ package com.university.courseRegistrationSystem.service;
 import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.GradeRequest;
 import com.university.courseRegistrationSystem.dto.StudentEnrollmentResponse;
-import com.university.courseRegistrationSystem.dto.UpdateCgpaCriteriaRequest;
 import com.university.courseRegistrationSystem.model.*;
 import com.university.courseRegistrationSystem.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -121,11 +120,11 @@ public class ProfessorService {
     }
 
     @Transactional
-    public void updateCgpaCriteria(UpdateCgpaCriteriaRequest request) {
+    public void updateCgpaCriteria(String CourseCode,BigDecimal minCgpaRequired) {
 
         Professor professor = getCurrentProfessor();
 
-        Course course = courseRepository.findByCode(request.getCourseCode())
+        Course course = courseRepository.findByCode(CourseCode)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
         // verify course belongs to this professor
@@ -135,13 +134,12 @@ public class ProfessorService {
         }
 
         // validate CGPA range
-        BigDecimal newCgpa = request.getMinCgpaRequired();
-        if (newCgpa.compareTo(BigDecimal.ZERO) < 0 ||
-                newCgpa.compareTo(new BigDecimal("4.0")) > 0) {
+        if (minCgpaRequired.compareTo(BigDecimal.ZERO) < 0 ||
+                minCgpaRequired.compareTo(new BigDecimal("4.0")) > 0) {
             throw new RuntimeException("CGPA must be between 0.0 and 4.0");
         }
 
-        course.setMinCgpaRequired(newCgpa);
+        course.setMinCgpaRequired(minCgpaRequired);
         courseRepository.save(course);
     }
 
