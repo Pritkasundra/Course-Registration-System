@@ -60,7 +60,7 @@ public class ProfessorService {
 
         // get only active enrollments — not dropped students
         List<Enrollment> enrollments = enrollmentRepository
-                .findByCodeandStatus(courseCode, EnrollmentStatus.ACTIVE);
+                .findByCodeAndStatus(courseCode, EnrollmentStatus.ACTIVE);
 
         return enrollments.stream()
                 .map(e -> new StudentEnrollmentResponse(
