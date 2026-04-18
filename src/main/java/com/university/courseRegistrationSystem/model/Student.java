@@ -40,6 +40,7 @@ public class Student {
 
     private int completedCredits;
 
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Enrollment> enrollments = new ArrayList<>();
 
