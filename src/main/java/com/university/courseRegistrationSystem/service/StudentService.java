@@ -22,8 +22,8 @@ public class StudentService{
     private Student getCurrentStudent(){
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
         return studentRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Student with email " + email + " not found"));
+
     }
 
     // View Student profile
@@ -51,8 +51,10 @@ public class StudentService{
 
         // if student has no CGPA yet treat as 0.0
         BigDecimal cgpa = student.getCgpa() != null ? student.getCgpa() : BigDecimal.ZERO;
+        String semester = student.getSemester() != null ? student.getSemester() : null;
+        int year = student.getYear();
 
-        return courseRepository.findEligibleCourse(cgpa)
+        return courseRepository.findEligibleCourse(cgpa,semester,year)
                 .stream()
                 .map(course -> new CourseResponse(
                         course.getId(),
@@ -65,7 +67,9 @@ public class StudentService{
                         course.getMinCgpaRequired(),
                         course.getProfessor() != null
                                 ? course.getProfessor().getId()
-                                : null
+                                : null,
+                        course.getSemester(),
+                        course.getYear()
                 ))
                 .collect(Collectors.toList());
     }

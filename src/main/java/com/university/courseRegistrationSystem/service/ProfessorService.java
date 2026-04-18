@@ -180,7 +180,9 @@ public class ProfessorService {
                 course.getMinCgpaRequired(),
                 course.getProfessor() != null
                         ? course.getProfessor().getId()
-                        : null
+                        : null,
+                course.getSemester(),
+                course.getYear()
         );
     }
 }

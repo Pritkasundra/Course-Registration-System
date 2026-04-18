@@ -124,7 +124,9 @@ public class AdminService {
                 course.getMinCgpaRequired(),
                 course.getProfessor() != null
                         ? course.getProfessor().getId()
-                        : null
+                        : null,
+                course.getSemester(),
+                course.getYear()
         );
     }
 }

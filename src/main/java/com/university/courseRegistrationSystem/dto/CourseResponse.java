@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 
 public class CourseResponse{
+
     private Long id;
     private String name;
     private String code;
@@ -20,5 +21,7 @@ public class CourseResponse{
     private boolean isCoreFlag;
     private BigDecimal minCgpaRequired;
     private Long professorId;
+    private String semester;
+    private int year;
 
 }

@@ -46,6 +46,12 @@ public class Course {
     @Column(precision = 4, scale = 2)
     private BigDecimal minCgpaRequired;
 
+    @Column(nullable = false)
+    private String semester;
+
+    @Column(nullable = false)
+    private int year;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id")
     private Professor professor;

@@ -26,8 +26,8 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     List<Course> findByProfessorId(Long professorId);
 
     // Student will use this to see all eligible course
-    @Query(value = "SELECT c FROM Course c WHERE c.minCgpaRequired <= :cgpa AND c.availableSeats > 0")
-    List<Course> findEligibleCourse(@Param("cgpa")BigDecimal cgpa);
+    @Query("SELECT c FROM Course c WHERE c.availableSeats > 0 " + "AND c.minCgpaRequired <= :cgpa " + "AND c.semester = :semester " + "AND c.year = :year")
+    List<Course> findEligibleCourse(@Param("cgpa") BigDecimal cgpa, @Param("semester") String semester, @Param("year") int year);
 
     // this will be used to change course cgpa criteria
     @Modifying
