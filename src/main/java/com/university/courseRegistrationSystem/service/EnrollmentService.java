@@ -1,6 +1,5 @@
 package com.university.courseRegistrationSystem.service;
 
-import com.university.courseRegistrationSystem.dto.EnrollmentRequest;
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
 import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.model.Enrollment;
@@ -13,9 +12,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class EnrollmentService {
 
     private final EnrollmentRepository enrollmentRepository;
@@ -42,12 +44,12 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public ResponseEntity<String> enrollCourse(EnrollmentRequest request){
+    public ResponseEntity<String> enrollCourse(String courseCode){
 
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found with id: " + request.getCourseId()));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new RuntimeException("Course not found with code: " + courseCode));
 
 
         // check  is student already enrolled in this course
@@ -82,15 +84,15 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public ResponseEntity<String> dropCourse(Long courseId) {
+    public ResponseEntity<String> dropCourse(String courseCode) {
 
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new RuntimeException("Course not found with id: " + courseCode));
 
         // check  student enrolled in this course
-        Enrollment enrollment = enrollmentRepository.findByStudentIdAndCourseId(student.getId(), courseId).orElseThrow(() -> new RuntimeException("You are not enrolled in: " + course.getName()));
+        Enrollment enrollment = enrollmentRepository.findByStudentIdAndCode(courseCode,student.getId()).orElseThrow(() -> new RuntimeException("You are not enrolled in: " + course.getName()));
 
         // check  enrollment active
         if (!enrollment.isActive()) {

@@ -23,11 +23,15 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     List<Enrollment> findByStudentIdAndStatus(Long studentId, EnrollmentStatus status);
 
     // We will use this when a student want to drop a course
-    Optional<Enrollment> findByStudentIdAndCourseId(Long studentId,Long courseId);
+    Optional<Enrollment> findByStudentIdAndCourseId(Long studentId,Long CourseId);
 
     // professor views all active students in their course
     @Query("SELECT e FROM Enrollment e WHERE e.course.id = :courseId AND e.course.professor.id= :professorId AND e.status = 'ACTIVE'")
     List <Enrollment> findByProfessorIdAndCourseId(@Param("courseId") Long courseId , @Param("professorId") Long professorId);
 
-    List<Enrollment> findByCodeandStatus(String courseCode, EnrollmentStatus enrollmentStatus);
+    @Query("SELECT e FROM Enrollment e WHERE e.course.code = :courseCode AND e.student.id = :studentId AND e.status = 'ACTIVE'")
+    Optional<Enrollment> findByStudentIdAndCode(@Param("courseCode") String courseCode , @Param("professorId") Long studentId);
+
+    @Query("SELECT e FROM Enrollment e WHERE e.course.code = :courseCode AND e.status = :enrollmentStatus")
+    List<Enrollment> findByCodeAndStatus(@Param("courseCode")String courseCode,@Param("enrollmentStatus")EnrollmentStatus enrollmentStatus);
 }
