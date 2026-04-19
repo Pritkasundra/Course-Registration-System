@@ -30,10 +30,13 @@ public class EnrollmentService {
         this.studentRepository = studentRepository;
     }
 
-    private Student getCurrentStudent() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    private Student getCurrentStudent(){
 
-        return studentRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Student not found with email: " + email));
+        Long studentId = Long.parseLong(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+
     }
 
     public List<EnrollmentResponse> getRegisteredCourses() {
@@ -92,7 +95,7 @@ public class EnrollmentService {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new RuntimeException("Course not found with id: " + courseCode));
 
         // check  student enrolled in this course
-        Enrollment enrollment = enrollmentRepository.findByStudentIdAndCode(courseCode,student.getId()).orElseThrow(() -> new RuntimeException("You are not enrolled in: " + course.getName()));
+        Enrollment enrollment = enrollmentRepository.findByCodeAndStudentId(courseCode,student.getId()).orElseThrow(() -> new RuntimeException("You are not enrolled in: " + course.getName()));
 
         // check  enrollment active
         if (!enrollment.isActive()) {

@@ -56,7 +56,7 @@ public class StudentController {
 
     // DELETE /student/enrollments/{courseId}
     // student drops a course
-    @DeleteMapping("/enrollments/{courseCode}")
+    @DeleteMapping("/drop/{courseCode}")
     public ResponseEntity<String> dropCourse(@PathVariable String courseCode) {
         enrollmentService.dropCourse(courseCode);
         return ResponseEntity.ok("Course dropped successfully");
