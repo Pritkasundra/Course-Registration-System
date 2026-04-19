@@ -28,10 +28,11 @@ public class ProfessorService {
 
     // Get current logged in professor
     private Professor getCurrentProfessor(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long professorId = Long.parseLong(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return professorRepository.findById(professorId).orElseThrow(() -> new RuntimeException("professor with id " + professorId + " not found"));
 
-        return professorRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("Professor not found"));
     }
 
     // View all course of logged in professor

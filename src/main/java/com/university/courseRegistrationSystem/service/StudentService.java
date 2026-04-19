@@ -23,8 +23,10 @@ public class StudentService{
     //Get CurrentStudent
     private Student getCurrentStudent(){
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return studentRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Student with email " + email + " not found"));
+        Long studentId = Long.parseLong(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
 
     }
 
