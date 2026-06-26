@@ -3,6 +3,7 @@ package com.university.courseRegistrationSystem.service;
 import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.GradeRequest;
 import com.university.courseRegistrationSystem.dto.StudentEnrollmentResponse;
+import com.university.courseRegistrationSystem.exception.CustomException;
 import com.university.courseRegistrationSystem.model.*;
 import com.university.courseRegistrationSystem.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ProfessorService {
         Long professorId = Long.parseLong(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
-        return professorRepository.findById(professorId).orElseThrow(() -> new RuntimeException("professor with id " + professorId + " not found"));
+        return professorRepository.findById(professorId).orElseThrow(() -> new CustomException(400,"professor with id " + professorId + " not found"));
 
     }
 
@@ -52,10 +53,10 @@ public class ProfessorService {
         // verify this course belongs to logged in professor
         // prevents professor A from viewing professor B's students
         Course course = courseRepository.findByCode(courseCode)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new CustomException(400,"Course not found"));
 
         if (!course.getProfessor().getId().equals(professor.getId())) {
-            throw new RuntimeException(
+            throw new CustomException(403,
                     "You are not authorized to view students of this course");
         }
 
@@ -79,24 +80,24 @@ public class ProfessorService {
     public void gradeStudent(GradeRequest request){
 
         Course course = courseRepository.findByCode(request.getCourseCode())
-                .orElseThrow(()->new RuntimeException("Course not found!"));
+                .orElseThrow(()->new CustomException(400,"Course not found!"));
 
         // verify course belongs to this professor
         if(!course.getProfessor().getId().equals(getCurrentProfessor().getId())){
-            throw new RuntimeException(
+            throw new CustomException(403,
                     "You are not authorized to grade students of this course"
             );
         }
 
         Student student = studentRepository.findById(request.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found: " + request.getStudentId()));
+                .orElseThrow(() -> new CustomException(400,"Student not found: " + request.getStudentId()));
 
         Enrollment enrollment = enrollmentRepository.findByStudentIdAndCourseId(student.getId(), course.getId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new CustomException(400,
                         "Student is not enrolled in this course"));
 
         if(!enrollment.isActive()) {
-            throw new RuntimeException(
+            throw new CustomException(400,
                     "Cannot grade a student who dropped this course");
         }
 
@@ -126,18 +127,18 @@ public class ProfessorService {
         Professor professor = getCurrentProfessor();
 
         Course course = courseRepository.findByCode(CourseCode)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new CustomException(400,"Course not found"));
 
         // verify course belongs to this professor
         if (!course.getProfessor().getId().equals(professor.getId())) {
-            throw new RuntimeException(
+            throw new CustomException(403,
                     "You are not authorized to update this course");
         }
 
         // validate CGPA range
         if (minCgpaRequired.compareTo(BigDecimal.ZERO) < 0 ||
                 minCgpaRequired.compareTo(new BigDecimal("4.0")) > 0) {
-            throw new RuntimeException("CGPA must be between 0.0 and 4.0");
+            throw new CustomException(400,"CGPA must be between 0.0 and 4.0");
         }
 
         course.setMinCgpaRequired(minCgpaRequired);

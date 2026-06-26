@@ -2,6 +2,7 @@ package com.university.courseRegistrationSystem.service;
 
 import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.StudentProfileResponse;
+import com.university.courseRegistrationSystem.exception.CustomException;
 import com.university.courseRegistrationSystem.model.Student;
 import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
@@ -26,7 +27,7 @@ public class StudentService{
         Long studentId = Long.parseLong(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
-        return studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+        return studentRepository.findById(studentId).orElseThrow(() -> new CustomException(404,"Student with id " + studentId + " not found"));
 
     }
 

@@ -1,6 +1,7 @@
 package com.university.courseRegistrationSystem.service;
 
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
+import com.university.courseRegistrationSystem.exception.CustomException;
 import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.model.Enrollment;
 import com.university.courseRegistrationSystem.model.EnrollmentStatus;
@@ -35,7 +36,7 @@ public class EnrollmentService {
         Long studentId = Long.parseLong(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
-        return studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+        return studentRepository.findById(studentId).orElseThrow(() -> new CustomException(400,"Student with id " + studentId + " not found"));
 
     }
 
@@ -52,24 +53,24 @@ public class EnrollmentService {
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new RuntimeException("Course not found with code: " + courseCode));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new CustomException(400,"Course not found with code: " + courseCode));
 
 
         // check  is student already enrolled in this course
         if (enrollmentRepository.existsByStudentIdAndCourseId(student.getId(),course.getId())) {
 
-            throw new RuntimeException("You are already enrolled in: " + course.getName());
+            throw new CustomException(409,"You are already enrolled in: " + course.getName());
         }
 
         // check  does student CGPA meet minimum requirement
         if (student.getCgpa() != null && student.getCgpa().compareTo(course.getMinCgpaRequired()) < 0) {
 
-            throw new RuntimeException("Your CGPA " + student.getCgpa() + " does not meet minimum requirement of " + course.getMinCgpaRequired() + " for course: " + course.getName());
+            throw new CustomException(400,"Your CGPA " + student.getCgpa() + " does not meet minimum requirement of " + course.getMinCgpaRequired() + " for course: " + course.getName());
         }
 
         // check  are seats available
         if (course.getAvailableSeats() <= 0) {
-            throw new RuntimeException("No seats available in course: " + course.getName());
+            throw new CustomException(400,"No seats available in course: " + course.getName());
         }
         try {
             course.setAvailableSeats(course.getAvailableSeats() - 1);
@@ -82,7 +83,7 @@ public class EnrollmentService {
 
         }
         catch (ObjectOptimisticLockingFailureException e) {
-            throw new RuntimeException("Too many simultaneous registrations. Please try again.");
+            throw new CustomException(503,"Too many simultaneous registrations. Please try again.");
         }
     }
 
@@ -92,20 +93,20 @@ public class EnrollmentService {
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new RuntimeException("Course not found with id: " + courseCode));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new CustomException(400,"Course not found with id: " + courseCode));
 
         // check  student enrolled in this course
-        Enrollment enrollment = enrollmentRepository.findByCodeAndStudentId(courseCode,student.getId()).orElseThrow(() -> new RuntimeException("You are not enrolled in: " + course.getName()));
+        Enrollment enrollment = enrollmentRepository.findByCodeAndStudentId(courseCode,student.getId()).orElseThrow(() -> new CustomException(400,"You are not enrolled in: " + course.getName()));
 
         // check  enrollment active
         if (!enrollment.isActive()) {
-            throw new RuntimeException("You have already dropped: " + course.getName());
+            throw new CustomException(400,"You have already dropped: " + course.getName());
         }
 
         // check  is this a core course
         // core courses cannot be dropped under any circumstances
         if (course.isCoreFlag()) {
-            throw new RuntimeException(course.getName() + " is a core course and cannot be dropped");
+            throw new CustomException(400,course.getName() + " is a core course and cannot be dropped");
         }
 
         // all checks passed drop the course

@@ -20,13 +20,13 @@ public class Professor {
     private Long id;
 
     @Column(nullable = false)
-    private String Name;
+    private String name;
 
     @Column(nullable = false,unique = true)
-    private String Email;
+    private String email;
 
     @Column(nullable = false)
-    private String Password;
+    private String password;
 
     @OneToMany(mappedBy = "professor", fetch = FetchType.LAZY)
     private List<Course> courses = new ArrayList<>();
