@@ -1,6 +1,7 @@
 package com.university.courseRegistrationSystem.service;
 
 import com.university.courseRegistrationSystem.dto.*;
+import com.university.courseRegistrationSystem.exception.CustomException;
 import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.model.Professor;
 import com.university.courseRegistrationSystem.repository.CourseRepository;
@@ -26,7 +27,7 @@ public class AdminService {
     public ResponseEntity<String> addCourse(CourseRequest request) {
 
         if(courseRepository.existsByCode(request.getCode())){
-            throw new RuntimeException("Course with code " + request.getCode() + " already exists");
+            throw new CustomException(409,"Course with code " + request.getCode() + " already exists");
         }
 
         Professor professor = professorRepository.findByEmail(request.getProfessorEmail()).orElseThrow(() -> new RuntimeException("Professor not found with email : " + request.getProfessorEmail()));
@@ -63,12 +64,12 @@ public class AdminService {
     public ResponseEntity<String> updateSeatMatrix(String code, int seats) {
 
         Course course = courseRepository.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new CustomException(404,"Course not found"));
 
         int enrolledCount = course.getTotalSeats() - course.getAvailableSeats();
 
         if (seats < enrolledCount) {
-            throw new RuntimeException("Cannot reduce seats below enrolled count");
+            throw new CustomException(400,"Cannot reduce seats below enrolled count");
         }
 
         int newAvailableSeats = seats - enrolledCount;
@@ -84,8 +85,8 @@ public class AdminService {
     @Transactional
     public ResponseEntity<String> updateProfessorForCourse(String code,String professorEmail) {
 
-        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course no found with code :" + code));
-        Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new RuntimeException("Professor not found with email : " + professorEmail));
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found with code :" + code));
+        Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorEmail));
         course.setProfessor(professor);
         courseRepository.save(course);
         return ResponseEntity.ok("Professor updated successfully for course code : " + course.getCode());
@@ -95,7 +96,7 @@ public class AdminService {
     @Transactional
     public ResponseEntity<String>  updateCoreStatus(String code, boolean isCoreFlag) {
 
-        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found: " + code));
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found: " + code));
         course.setCoreFlag(isCoreFlag);
         courseRepository.save(course);
 
@@ -107,9 +108,9 @@ public class AdminService {
     public ResponseEntity<String> updateCreditHours(String code,int  creditHours) {
 
         if (creditHours <= 0) {
-            throw new RuntimeException("Credit hours must be greater than 0");
+            throw new CustomException(400,"Credit hours must be greater than 0");
         }
-        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found: " + code));
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found: " + code));
         course.setCreditHours(creditHours);
         courseRepository.save(course);
         return ResponseEntity.ok("Credit hours updated successfully");
@@ -121,7 +122,7 @@ public class AdminService {
     }
 
     public List<StudentSummaryResponse> getAllStudents() {
-        return studentRepository.findAll().stream().map(s -> new StudentSummaryResponse(s.getId(), s.getName(), s.getEmail(), s.getCgpa(), s.getSemester(), s.getYear())).collect(Collectors.toList());
+        return studentRepository.findAll().stream().map(s -> new StudentSummaryResponse(s.getId(), s.getName(), s.getEmail())).collect(Collectors.toList());
     }
 
     private CourseResponse mapToResponse(Course course) {

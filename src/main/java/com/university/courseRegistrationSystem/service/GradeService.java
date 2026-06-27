@@ -1,6 +1,7 @@
 package com.university.courseRegistrationSystem.service;
 
 import com.university.courseRegistrationSystem.dto.GradeResponse;
+import com.university.courseRegistrationSystem.exception.CustomException;
 import com.university.courseRegistrationSystem.model.Grade;
 import com.university.courseRegistrationSystem.model.Student;
 import com.university.courseRegistrationSystem.repository.GradeRepository;
@@ -22,10 +23,10 @@ public class GradeService {
 
     // Get currently logged in student
     private Student getCurrentStudent(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        return studentRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("Student not found"));
+        Long studentId = Long.parseLong(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return studentRepository.findById(studentId).orElseThrow(() -> new CustomException(400,"Student with id " + studentId + " not found"));
     }
 
     // View all grade
@@ -44,7 +45,7 @@ public class GradeService {
         List<Grade> grades = gradeRepository.findByStudentIdAndSemester(student.getId(),semester);
 
         if(grades.isEmpty()){
-            throw new RuntimeException("Grades not found for semester: " + semester);
+            throw new CustomException(400,"Grades not found for semester: " + semester);
         }
 
         return grades.stream().map(this::mapToResponse).collect(Collectors.toList());

@@ -15,7 +15,4 @@ public class StudentSummaryResponse {
     private String name;
     private String email;
 
-    public StudentSummaryResponse(Long id, String name, String email, BigDecimal cgpa, String semester, int year) {
-
-    }
 }
