@@ -48,6 +48,18 @@ public class AdminService {
     }
 
     @Transactional
+    public ResponseEntity<String> deleteCourse(String code) {
+
+        // check course exists
+        Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found with code: " + code));
+
+        // just delete — CascadeType.ALL on enrollments and grades
+        // will automatically delete related enrollment and grade records
+        courseRepository.delete(course);
+        return ResponseEntity.ok("Course deleted successfully");
+    }
+
+    @Transactional
     public ResponseEntity<String> updateSeatMatrix(String code, int seats) {
 
         Course course = courseRepository.findByCode(code)
