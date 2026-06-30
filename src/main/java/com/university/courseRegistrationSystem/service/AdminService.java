@@ -49,7 +49,7 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseEntity<String> deleteCourse(String code) {
+    public String deleteCourse(String code) {
 
         // check course exists
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new RuntimeException("Course not found with code: " + code));
@@ -57,11 +57,11 @@ public class AdminService {
         // just delete — CascadeType.ALL on enrollments and grades
         // will automatically delete related enrollment and grade records
         courseRepository.delete(course);
-        return ResponseEntity.ok("Course deleted successfully");
+        return "Course deleted successfully";
     }
 
     @Transactional
-    public ResponseEntity<String> updateSeatMatrix(String code, int seats) {
+    public String updateSeatMatrix(String code, int seats) {
 
         Course course = courseRepository.findByCode(code)
                 .orElseThrow(() -> new CustomException(404,"Course not found"));
@@ -79,33 +79,33 @@ public class AdminService {
 
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Seats updated successfully for course code: " + code);
+        return "Seats updated successfully for course code: " + code;
     }
 
     @Transactional
-    public ResponseEntity<String> updateProfessorForCourse(String code,String professorEmail) {
+    public String updateProfessorForCourse(String code,String professorEmail) {
 
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found with code :" + code));
         Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorEmail));
         course.setProfessor(professor);
         courseRepository.save(course);
-        return ResponseEntity.ok("Professor updated successfully for course code : " + course.getCode());
+        return "Professor updated successfully for course code : " + course.getCode();
 
     }
 
     @Transactional
-    public ResponseEntity<String>  updateCoreStatus(String code, boolean isCoreFlag) {
+    public String  updateCoreStatus(String code, boolean isCoreFlag) {
 
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found: " + code));
         course.setCoreFlag(isCoreFlag);
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Course updated successfully");
+        return "Course updated successfully";
 
     }
 
     @Transactional
-    public ResponseEntity<String> updateCreditHours(String code,int  creditHours) {
+    public String updateCreditHours(String code,int  creditHours) {
 
         if (creditHours <= 0) {
             throw new CustomException(400,"Credit hours must be greater than 0");
@@ -113,7 +113,7 @@ public class AdminService {
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found: " + code));
         course.setCreditHours(creditHours);
         courseRepository.save(course);
-        return ResponseEntity.ok("Credit hours updated successfully");
+        return "Credit hours updated successfully";
 
     }
 

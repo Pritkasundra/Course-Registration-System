@@ -29,35 +29,35 @@ public class AdminController{
 
     @DeleteMapping("/delete-course/{code}")
     public ResponseEntity<String> deleteCourse(@PathVariable String code) {
-        return adminService.deleteCourse(code);
+        return ResponseEntity.ok(adminService.deleteCourse(code));
     }
 
     // PUT /admin/courses/{code}/seats
     // admin updates total seat count for a course
     @PutMapping("/courses/{code}/seats")
     public ResponseEntity<String> updateSeatMatrix(@PathVariable String code, @RequestParam int seats) {
-        return adminService.updateSeatMatrix(code, seats);
+        return ResponseEntity.ok(adminService.updateSeatMatrix(code, seats));
     }
 
     // PUT /admin/courses/{code}/professor
     // admin reassigns professor for a course
     @PutMapping("/courses/{code}/professor")
     public ResponseEntity<String> updateCourseProfessor(@PathVariable String code, @RequestParam String professorEmail) {
-        return adminService.updateProfessorForCourse(code, professorEmail);
+        return ResponseEntity.ok(adminService.updateProfessorForCourse(code, professorEmail));
     }
 
     // PUT /admin/courses/{code}/core-status
     // admin marks course as core or elective
     @PutMapping("/courses/{code}/core-status")
     public ResponseEntity<String> updateCoreStatus(@PathVariable String code, @RequestParam boolean isCoreFlag) {
-        return adminService.updateCoreStatus(code, isCoreFlag);
+        return ResponseEntity.ok(adminService.updateCoreStatus(code, isCoreFlag));
     }
 
     // PUT /admin/courses/{code}/credit-hours
     // admin updates credit hours for a course
     @PutMapping("/courses/{code}/credit-hours")
     public ResponseEntity<String> updateCreditHours(@PathVariable String code, @RequestParam int creditHours) {
-        return adminService.updateCreditHours(code, creditHours);
+        return ResponseEntity.ok(adminService.updateCreditHours(code, creditHours));
     }
 
     // GET /admin/courses

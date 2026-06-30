@@ -48,7 +48,7 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public ResponseEntity<String> enrollCourse(String courseCode){
+    public String enrollCourse(String courseCode){
 
         Student student = getCurrentStudent();
 
@@ -73,9 +73,11 @@ public class EnrollmentService {
             throw new CustomException(400,"No seats available in course: " + course.getName());
         }
 
+        //check student semester and semester for course
         if (course.getSemester() != student.getSemester()) {
             throw new CustomException(400, "Course belongs to semester " + course.getSemester() + " but student is in semester " + student.getSemester());
         }
+
         try {
             course.setAvailableSeats(course.getAvailableSeats() - 1);
             courseRepository.save(course);
@@ -83,7 +85,7 @@ public class EnrollmentService {
             Enrollment enrollment = new Enrollment(student, course);
             Enrollment saved = enrollmentRepository.save(enrollment);
 
-            return ResponseEntity.ok("You Enroll successfully: " + saved.getId());
+            return "You Enroll successfully: " + saved.getId();
 
         }
         catch (ObjectOptimisticLockingFailureException e) {
@@ -92,7 +94,7 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public ResponseEntity<String> dropCourse(String courseCode) {
+    public String dropCourse(String courseCode) {
 
         Student student = getCurrentStudent();
 
@@ -121,7 +123,7 @@ public class EnrollmentService {
         course.setAvailableSeats(course.getAvailableSeats() + 1);
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Course Dropped Successfully");
+        return "Course Dropped Successfully";
     }
 
     private EnrollmentResponse mapToResponse(Enrollment enrollment) {
