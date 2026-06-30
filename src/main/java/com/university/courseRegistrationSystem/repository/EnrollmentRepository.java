@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
 
     // check if student is already enrolled in course
-    boolean existsByStudentIdAndCourseId(Long studentId,Long courseId);
+    boolean existsByStudentIdAndCourseIdAndStatus(Long studentId,Long courseId,EnrollmentStatus enrollmentStatus);
 
     // student view their all course including dropped
     List<Enrollment> findByStudentId(Long studentId);

@@ -31,10 +31,6 @@ public class Course {
 
     private int totalSeats;
 
-    // Use @Version for optimistic locking prevent two students to lock the same seat
-    @Version
-    private int version;
-
     private int availableSeats;
 
     private int creditHours;

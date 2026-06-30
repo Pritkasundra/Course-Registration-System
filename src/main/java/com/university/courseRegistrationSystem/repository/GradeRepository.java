@@ -27,7 +27,7 @@ public interface GradeRepository extends JpaRepository<Grade,Long> {
     Optional<Grade> findByStudentIdAndCourseId(Long studentId, Long courseId);
 
     // update existing grade
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Grade g SET g.letterGrade = :letterGrade WHERE g.student.id = :studentId AND g.course.id = :courseId")
     void assignGrade(@Param("studentId") Long studentId,@Param("courseId") Long courseId,@Param("letterGrade") LetterGrade letterGrade);
@@ -37,7 +37,7 @@ public interface GradeRepository extends JpaRepository<Grade,Long> {
     List<Grade> findAllGradesByStudentId(@Param("studentId") Long studentId);
 
     //if Professor want then he can update the grade of student
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Grade g SET g.letterGrade = :letterGrade " + "WHERE g.student.id = :studentId AND g.course.id = :courseId")
     void updateGrade(@Param("studentId") Long studentId, @Param("courseId") Long courseId, @Param("letterGrade") LetterGrade letterGrade);

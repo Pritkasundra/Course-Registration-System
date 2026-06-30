@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 public class GradeService {
 
-    private StudentRepository studentRepository;
-    private GradeRepository gradeRepository;
+    private final StudentRepository studentRepository;
+    private final GradeRepository gradeRepository;
 
     // Get currently logged in student
     private Student getCurrentStudent(){
