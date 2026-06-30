@@ -17,15 +17,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
 
-public class AdminController {
+public class AdminController{
     private final AdminService adminService;
 
     // POST /admin/courses
     // admin adds a new course to the system
     @PostMapping("/course")
-    public ResponseEntity<ResponseEntity<String>> addCourse(
-            @RequestBody CourseRequest request) {
+    public ResponseEntity<ResponseEntity<String>> addCourse(@RequestBody CourseRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.addCourse(request));
+    }
+
+    @DeleteMapping("/delete-course/{code}")
+    public ResponseEntity<String> deleteCourse(@PathVariable String code) {
+        return adminService.deleteCourse(code);
     }
 
     // PUT /admin/courses/{code}/seats
