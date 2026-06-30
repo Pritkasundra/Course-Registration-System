@@ -9,6 +9,7 @@ import com.university.courseRegistrationSystem.model.Student;
 import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.EnrollmentRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -73,8 +74,7 @@ public class EnrollmentService {
             throw new CustomException(400,"No seats available in course: " + course.getName());
         }
 
-        //check student semester and semester for course
-        if (course.getSemester() != student.getSemester()) {
+        if (!course.getSemester().equals(student.getSemester())) {
             throw new CustomException(400, "Course belongs to semester " + course.getSemester() + " but student is in semester " + student.getSemester());
         }
 
