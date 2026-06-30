@@ -72,6 +72,10 @@ public class EnrollmentService {
         if (course.getAvailableSeats() <= 0) {
             throw new CustomException(400,"No seats available in course: " + course.getName());
         }
+
+        if (course.getSemester() != student.getSemester()) {
+            throw new CustomException(400, "Course belongs to semester " + course.getSemester() + " but student is in semester " + student.getSemester());
+        }
         try {
             course.setAvailableSeats(course.getAvailableSeats() - 1);
             courseRepository.save(course);
