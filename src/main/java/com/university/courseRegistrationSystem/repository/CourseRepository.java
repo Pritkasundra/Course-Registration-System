@@ -2,7 +2,9 @@ package com.university.courseRegistrationSystem.repository;
 
 import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.model.Professor;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +23,11 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
 
     // find course by code
     Optional<Course> findByCode(String code);
+
+    // find course by code with lock
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT c FROM Course c WHERE c.code = :code")
+    Optional<Course> findByCodeLock(@Param("code") String code);
 
     // professor will use this to see their course
     List<Course> findByProfessorId(Long professorId);

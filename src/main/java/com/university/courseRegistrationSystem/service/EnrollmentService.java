@@ -9,7 +9,7 @@ import com.university.courseRegistrationSystem.model.Student;
 import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.EnrollmentRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,11 +53,11 @@ public class EnrollmentService {
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new CustomException(400,"Course not found with code: " + courseCode));
+        Course course = courseRepository.findByCodeLock(courseCode).orElseThrow(() -> new CustomException(400,"Course not found with code: " + courseCode));
 
 
         // check  is student already enrolled in this course
-        if (enrollmentRepository.existsByStudentIdAndCourseId(student.getId(),course.getId())) {
+        if (enrollmentRepository.existsByStudentIdAndCourseIdAndStatus(student.getId(),course.getId(),EnrollmentStatus.ACTIVE)) {
 
             throw new CustomException(409,"You are already enrolled in: " + course.getName());
         }
