@@ -78,19 +78,14 @@ public class EnrollmentService {
             throw new CustomException(400, "Course belongs to semester " + course.getSemester() + " but student is in semester " + student.getSemester());
         }
 
-        try {
-            course.setAvailableSeats(course.getAvailableSeats() - 1);
-            courseRepository.save(course);
+        course.setAvailableSeats(course.getAvailableSeats() - 1);
+        courseRepository.save(course);
 
-            Enrollment enrollment = new Enrollment(student, course);
-            Enrollment saved = enrollmentRepository.save(enrollment);
+        Enrollment enrollment = new Enrollment(student, course);
+        Enrollment saved = enrollmentRepository.save(enrollment);
 
-            return "You Enroll successfully: " + saved.getId();
+        return "You Enroll successfully for course : " + saved.getId();
 
-        }
-        catch (ObjectOptimisticLockingFailureException e) {
-            throw new CustomException(503,"Too many simultaneous registrations. Please try again.");
-        }
     }
 
     @Transactional
@@ -99,14 +94,14 @@ public class EnrollmentService {
         Student student = getCurrentStudent();
 
         // check  does course exist
-        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new CustomException(400,"Course not found with id: " + courseCode));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new CustomException(404,"Course not found with id: " + courseCode));
 
         // check  student enrolled in this course
-        Enrollment enrollment = enrollmentRepository.findByCodeAndStudentId(courseCode,student.getId()).orElseThrow(() -> new CustomException(400,"You are not enrolled in: " + course.getName()));
+        Enrollment enrollment = enrollmentRepository.findByCodeAndStudentId(courseCode,student.getId()).orElseThrow(() -> new CustomException(404,"You are not enrolled in: " + course.getName()));
 
         // check  enrollment active
         if (!enrollment.isActive()) {
-            throw new CustomException(400,"You have already dropped: " + course.getName());
+            throw new CustomException(409,"You have already dropped: " + course.getName());
         }
 
         // check  is this a core course

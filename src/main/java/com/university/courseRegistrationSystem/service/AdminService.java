@@ -24,7 +24,7 @@ public class AdminService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public ResponseEntity<String> addCourse(CourseRequest request) {
+    public String addCourse(CourseRequest request) {
 
         if(courseRepository.existsByCode(request.getCode())){
             throw new CustomException(409,"Course with code " + request.getCode() + " already exists");
@@ -44,7 +44,7 @@ public class AdminService {
 
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Course added successfully");
+        return "Course added successfully";
 
     }
 
@@ -61,10 +61,37 @@ public class AdminService {
     }
 
     @Transactional
+    public String updateCourse(String code, CourseUpdateRequest request){
+        String message = "";
+        if(request.getSeats() != null){
+            message += (this.updateSeatMatrix(code,request.getSeats()) + ", ");
+
+        }
+
+        if(request.getIsCoreFlag() != null){
+            message += (this.updateCoreStatus(code,request.getIsCoreFlag()) + ", ");
+        }
+
+        if(request.getCreditHours() != null){
+            message += (this.updateCreditHours(code,request.getCreditHours()) + ", ");
+        }
+
+        if(request.getProfessorEmail() != null){
+            message += (this.updateProfessorForCourse(code, request.getProfessorEmail()));
+        }
+
+        if(message.isEmpty()){
+            message += "No changes are made";
+        }
+
+        return message;
+
+    }
+    @Transactional
     public String updateSeatMatrix(String code, int seats) {
 
         Course course = courseRepository.findByCode(code)
-                .orElseThrow(() -> new CustomException(404,"Course not found"));
+                .orElseThrow(() -> new CustomException(400,"Course not found"));
 
         int enrolledCount = course.getTotalSeats() - course.getAvailableSeats();
 
@@ -100,7 +127,7 @@ public class AdminService {
         course.setCoreFlag(isCoreFlag);
         courseRepository.save(course);
 
-        return "Course updated successfully";
+        return "Course status updated successfully";
 
     }
 

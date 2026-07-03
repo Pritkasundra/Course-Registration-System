@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/student")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('STUDENT')")
+
 
 public class StudentController {
 
@@ -43,8 +43,7 @@ public class StudentController {
     // student registers for a course
     @PostMapping("/enroll/{courseCode}")
     public ResponseEntity<String> enrollCourse(@PathVariable String courseCode){
-        enrollmentService.enrollCourse(courseCode);
-        return ResponseEntity.ok("Successfully registered for course!");
+        return ResponseEntity.ok(enrollmentService.enrollCourse(courseCode));
     }
 
     // GET /student/enrollments
@@ -58,8 +57,8 @@ public class StudentController {
     // student drops a course
     @DeleteMapping("/drop/{courseCode}")
     public ResponseEntity<String> dropCourse(@PathVariable String courseCode) {
-        enrollmentService.dropCourse(courseCode);
-        return ResponseEntity.ok("Course dropped successfully");
+
+        return ResponseEntity.ok(enrollmentService.dropCourse(courseCode));
     }
 
     // GET /student/grades
