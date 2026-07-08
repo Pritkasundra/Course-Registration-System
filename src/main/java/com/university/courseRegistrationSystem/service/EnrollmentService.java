@@ -86,7 +86,6 @@ public class EnrollmentService {
             Enrollment saved = enrollmentRepository.save(enrollment);
 
             return "You Enroll successfully: " + saved.getId();
-
         }
         catch (ObjectOptimisticLockingFailureException e) {
             throw new CustomException(503,"Too many simultaneous registrations. Please try again.");
