@@ -1,6 +1,6 @@
 # Course Registration System
 
-A backend REST API built with Java and Spring Boot for managing university course registrations. The system supports three roles Student, Professor and Admin each with their own set of features and access controls secured using JWT authentication.
+This project is a backend REST API developed using Java and Spring Boot to manage university course registrations. It supports three user roles—Student, Professor, and Admin—each with specific features and role-based access controls. The application uses JWT-based authentication to ensure secure access to its APIs and resources.
 
 ---
 ## Features
@@ -9,6 +9,7 @@ A backend REST API built with Java and Spring Boot for managing university cours
 - View personal profile including CGPA and credit information
 - Browse all eligible courses based on CGPA and seat availability
 - Register for courses with concurrent enrollment protection
+- Browse all courses in which the student is currently enrolled
 - Drop elective courses (core courses cannot be dropped)
 - View grades by semester or across all semesters
 
@@ -43,7 +44,7 @@ A backend REST API built with Java and Spring Boot for managing university cours
 | Category | Technology |
 |---|---|
 | Language | Java |
-| Framework | Spring Boot, Spring MVC, Spring Security |
+| Framework | Spring Boot, Spring MVC, Spring Security, Spring Data JPA |
 | Authentication | JWT (JSON Web Token) |
 | Database | PostgreSQL |
 | ORM | Hibernate, Spring Data JPA |
@@ -121,13 +122,11 @@ Authorization: Bearer <your_token_here>
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
-| POST | `/admin/courses` | Add a new course | Admin |
+| POST | `/admin/course` | Add a new course | Admin |
 | GET | `/admin/courses` | View all courses | Admin |
 | GET | `/admin/students` | View all students | Admin |
-| PUT | `/admin/courses/{code}/seats` | Update seat matrix | Admin |
-| PUT | `/admin/courses/{code}/professor` | Assign or change professor | Admin |
-| PUT | `/admin/courses/{code}/core-status` | Update core course status | Admin |
-| PUT | `/admin/courses/{code}/credit-hours` | Update credit hours | Admin |
+| PUT | `/admin/courses/{code}` | Update a Course | Admin |
+| DELETE | `/admin/courses/{code}` | Delete a Course | Admin |
 
 ---
 
@@ -246,6 +245,7 @@ Course-Registration-System/
                 │   ├── DropCourseRequest.java
                 │   ├── EnrollmentRequest.java
                 │   ├── EnrollmentResponse.java
+                │   ├── CourseUpdateRequest.java
                 │   ├── GradeRequest.java
                 │   ├── GradeResponse.java
                 │   ├── LoginRequest.java
@@ -254,17 +254,9 @@ Course-Registration-System/
                 │   └── StudentSummaryResponse.java
                 │
                 ├── 📁 exception/
-                │   ├── AlreadyEnrolledException.java
-                │   ├── CannotDropCoreException.java
-                │   ├── CourseFullException.java
-                │   ├── CourseNotFoundException.java
-                │   ├── EnrollmentNotFoundException.java
-                │   ├── GradeAlreadyExistsException.java
-                │   ├── NotEligibleException.java
-                │   ├── NotEnrolledException.java
-                │   ├── ProfessorNotAuthorizedException.java
-                │   └── StudentNotFoundException.java
-                │
+                │   ├── CustomException.java
+                │   └── GlobalExceptionHandler.java
+                │  
                 ├── 📁 model/
                 │   ├── Admin.java
                 │   ├── Course.java
