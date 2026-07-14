@@ -35,7 +35,7 @@ public class AdminController{
     }
 
     // PUT /admin/courses/{code}/seats
-    // admin updates total seat count for a course
+    // admin updates Course
     @PatchMapping("/course/{code}")
     public ResponseEntity<String> updateCourse(@PathVariable String code, @RequestBody CourseUpdateRequest request) {
         return ResponseEntity.ok(adminService.updateCourse(code, request));
