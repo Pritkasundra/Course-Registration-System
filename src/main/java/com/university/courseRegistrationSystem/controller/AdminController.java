@@ -5,6 +5,7 @@ import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.CourseUpdateRequest;
 import com.university.courseRegistrationSystem.dto.StudentSummaryResponse;
 import com.university.courseRegistrationSystem.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import java.util.List;
 public class AdminController{
     private final AdminService adminService;
 
-    // POST /admin/courses
+    // POST /admin/course
     // admin adds a new course to the system
     @PostMapping("/course")
     public ResponseEntity<String> addCourse(@RequestBody CourseRequest request) {

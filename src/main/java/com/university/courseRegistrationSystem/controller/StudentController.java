@@ -4,12 +4,11 @@ import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
 import com.university.courseRegistrationSystem.dto.GradeResponse;
 import com.university.courseRegistrationSystem.dto.StudentProfileResponse;
-import com.university.courseRegistrationSystem.service.EnrollmentService;
+import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.service.GradeService;
 import com.university.courseRegistrationSystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
-    private final EnrollmentService enrollmentService;
     private final GradeService gradeService;
 
     // GET /student/profile
@@ -35,7 +33,7 @@ public class StudentController {
     // GET /student/courses/eligible
     // Student see list of all eligible course
     @GetMapping("/courses/eligible")
-    public ResponseEntity<List<CourseResponse>> getEligibleCourses(){
+    public ResponseEntity<List<Course>> getEligibleCourses(){
         return ResponseEntity.ok(studentService.getEligibleCourses());
     }
 
@@ -43,14 +41,14 @@ public class StudentController {
     // student registers for a course
     @PostMapping("/enroll/{courseCode}")
     public ResponseEntity<String> enrollCourse(@PathVariable String courseCode){
-        return ResponseEntity.ok(enrollmentService.enrollCourse(courseCode));
+        return ResponseEntity.ok(studentService.enrollCourse(courseCode));
     }
 
     // GET /student/enrollments
     // student views all their currently active enrollments
     @GetMapping("/enrollments")
     public ResponseEntity<List<EnrollmentResponse>> getRegisteredCourses() {
-        return ResponseEntity.ok(enrollmentService.getRegisteredCourses());
+        return ResponseEntity.ok(studentService.getRegisteredCourses());
     }
 
     // DELETE /student/enrollments/{courseId}
@@ -58,7 +56,7 @@ public class StudentController {
     @DeleteMapping("/drop/{courseCode}")
     public ResponseEntity<String> dropCourse(@PathVariable String courseCode) {
 
-        return ResponseEntity.ok(enrollmentService.dropCourse(courseCode));
+        return ResponseEntity.ok(studentService.dropCourse(courseCode));
     }
 
     // GET /student/grades
