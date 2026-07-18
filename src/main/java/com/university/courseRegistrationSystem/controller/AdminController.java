@@ -34,7 +34,7 @@ public class AdminController{
         return ResponseEntity.ok(adminService.deleteCourse(code));
     }
 
-    // PUT /admin/courses/{code}/seats
+    // Patch /admin/courses/{code}
     // admin updates Course
     @PatchMapping("/course/{code}")
     public ResponseEntity<String> updateCourse(@PathVariable String code, @RequestBody CourseUpdateRequest request) {

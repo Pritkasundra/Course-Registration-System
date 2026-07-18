@@ -41,6 +41,8 @@ public class AdminService {
         course.setCoreFlag(request.isCoreFlag());
         course.setCreditHours(request.getCreditHours());
         course.setMinCgpaRequired(request.getMinCgpaRequired());
+        course.setSemester(request.getSemester());   // add this
+        course.setYear(request.getYear());
 
         courseRepository.save(course);
 
