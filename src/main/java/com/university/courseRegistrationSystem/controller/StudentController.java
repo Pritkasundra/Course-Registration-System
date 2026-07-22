@@ -1,9 +1,9 @@
 package com.university.courseRegistrationSystem.controller;
 
+import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
 import com.university.courseRegistrationSystem.dto.GradeResponse;
 import com.university.courseRegistrationSystem.dto.StudentProfileResponse;
-import com.university.courseRegistrationSystem.model.Course;
 import com.university.courseRegistrationSystem.service.GradeService;
 import com.university.courseRegistrationSystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class StudentController {
     // GET /student/courses/eligible
     // Student see list of all eligible course
     @GetMapping("/courses/eligible")
-    public ResponseEntity<List<Course>> getEligibleCourses(){
+    public ResponseEntity<List<CourseResponse>> getEligibleCourses(){
         return ResponseEntity.ok(studentService.getEligibleCourses());
     }
 
