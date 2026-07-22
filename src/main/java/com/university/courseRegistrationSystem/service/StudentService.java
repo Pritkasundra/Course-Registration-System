@@ -1,6 +1,5 @@
 package com.university.courseRegistrationSystem.service;
 
-import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
 import com.university.courseRegistrationSystem.dto.StudentProfileResponse;
 import com.university.courseRegistrationSystem.exception.CustomException;

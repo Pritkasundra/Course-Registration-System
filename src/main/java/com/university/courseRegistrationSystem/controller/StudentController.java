@@ -1,6 +1,5 @@
 package com.university.courseRegistrationSystem.controller;
 
-import com.university.courseRegistrationSystem.dto.CourseResponse;
 import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
 import com.university.courseRegistrationSystem.dto.GradeResponse;
 import com.university.courseRegistrationSystem.dto.StudentProfileResponse;

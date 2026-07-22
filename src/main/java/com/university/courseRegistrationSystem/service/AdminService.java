@@ -8,7 +8,7 @@ import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.ProfessorRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +32,15 @@ public class AdminService {
 
         Professor professor = professorRepository.findByEmail(request.getProfessorEmail()).orElseThrow(() -> new RuntimeException("Professor not found with email : " + request.getProfessorEmail()));
 
+        Course course = getCourse(request, professor);
+
+        courseRepository.save(course);
+
+        return "Course added successfully";
+
+    }
+
+    private static @NonNull Course getCourse(CourseRequest request, Professor professor) {
         Course course = new Course();
         course.setCode(request.getCode());
         course.setName(request.getName());
@@ -41,13 +50,9 @@ public class AdminService {
         course.setCoreFlag(request.isCoreFlag());
         course.setCreditHours(request.getCreditHours());
         course.setMinCgpaRequired(request.getMinCgpaRequired());
-        course.setSemester(request.getSemester());   // add this
+        course.setSemester(request.getSemester());
         course.setYear(request.getYear());
-
-        courseRepository.save(course);
-
-        return "Course added successfully";
-
+        return course;
     }
 
     @Transactional
