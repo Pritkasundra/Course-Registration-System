@@ -12,27 +12,27 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/professor")
+@RequestMapping("/professors")
 @RequiredArgsConstructor
 
 public class ProfessorController {
     private final ProfessorService professorService;
 
-    // GET professor/courses
+    // GET professors/courses
     // professor views all courses assigned to them
     @GetMapping("/courses")
     public ResponseEntity<List<CourseResponse>> getMyCourse(){
         return ResponseEntity.ok(professorService.getMyCourses());
     }
 
-    // GET professor/courses/{courseCode}/students
+    // GET professors/courses/{course-code}/students
     // professor views all active students in their course
-    @GetMapping("/courses/{courseCode}/students")
-    public ResponseEntity<List<StudentEnrollmentResponse>> getEnrolledStudents(@PathVariable String courseCode){
+    @GetMapping("/courses/{course-code}/students")
+    public ResponseEntity<List<StudentEnrollmentResponse>> getEnrolledStudents(@PathVariable("course-code") String courseCode){
         return ResponseEntity.ok(professorService.getEnrolledStudents(courseCode));
     }
 
-    // POST professor/grades
+    // POST professors/grades
     // professor assigns and updates grade for student
     @PostMapping("/grades")
     public ResponseEntity<String> gradeStudent(
@@ -41,11 +41,11 @@ public class ProfessorController {
         return ResponseEntity.ok("Grade assigned successfully");
     }
 
-    // PUT professor/courses/{courseCode}/cgpa-criteria
+    // PATCH professors/courses/{course-code}/cgpa-criteria/{minCgpaRequired}
     // professor updates minimum CGPA required for their course
-    @PutMapping("/courses/{courseCode}/cgpa-criteria/{minCgpaRequired}")
+    @PatchMapping("/courses/{course-code}/cgpa-criteria/{minCgpaRequired}")
     public ResponseEntity<String> updateCgpaCriteria(
-            @PathVariable String courseCode,
+            @PathVariable("course-code") String courseCode,
             @PathVariable BigDecimal minCgpaRequired) {
         professorService.updateCgpaCriteria(courseCode, minCgpaRequired);
         return ResponseEntity.ok("CGPA criteria updated successfully");

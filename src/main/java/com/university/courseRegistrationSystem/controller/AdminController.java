@@ -13,43 +13,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 @RequiredArgsConstructor
 
 
 public class AdminController{
     private final AdminService adminService;
 
-    // POST /admin/course
+    // POST /admins/courses
     // admin adds a new course to the system
-    @PostMapping("/course")
+    @PostMapping("/courses")
     public ResponseEntity<String> addCourse(@RequestBody CourseRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.addCourse(request));
     }
 
-    @DeleteMapping("/course/{code}")
-    public ResponseEntity<String> deleteCourse(@PathVariable String code) {
-        return ResponseEntity.ok(adminService.deleteCourse(code));
+    @DeleteMapping("/courses/{course-code}")
+    public ResponseEntity<String> deleteCourse(@PathVariable("course-code") String courseCode) {
+        return ResponseEntity.ok(adminService.deleteCourse(courseCode));
     }
 
-    // Patch /admin/courses/{code}
+    // Patch /admins/courses/{code}
     // admin updates Course
-    @PatchMapping("/course/{code}")
-    public ResponseEntity<String> updateCourse(@PathVariable String code, @RequestBody CourseUpdateRequest request) {
-        return ResponseEntity.ok(adminService.updateCourse(code, request));
+    @PatchMapping("/courses/{course-code}")
+    public ResponseEntity<String> updateCourse(@PathVariable("course-code") String courseCode, @RequestBody CourseUpdateRequest request) {
+        return ResponseEntity.ok(adminService.updateCourse(courseCode, request));
     }
 
 
-    // GET /admin/courses
+    // GET /admins/courses
     // admin views all courses in the system
-    @GetMapping("/course")
+    @GetMapping("/courses")
     public ResponseEntity<List<CourseResponse>> getAllCourses() {
         return ResponseEntity.ok(adminService.getAllCourses());
     }
 
-    // GET /admin/students
+    // GET /admins/students
     // admin views all registered students
-    @GetMapping("/student")
+    @GetMapping("/students")
     public ResponseEntity<List<StudentSummaryResponse>> getAllStudents() {
         return ResponseEntity.ok(adminService.getAllStudents());
     }

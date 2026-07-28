@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class EnrollmentRequest {
 
-    private Long courseId;
+    private String courseCode;
 }

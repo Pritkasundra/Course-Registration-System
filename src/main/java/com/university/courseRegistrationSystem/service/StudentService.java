@@ -116,7 +116,7 @@ public class StudentService{
         Enrollment enrollment = new Enrollment(student, course);
         Enrollment saved = enrollmentRepository.save(enrollment);
 
-        return "You Enroll successfully for course : " + saved.getId();
+        return "You Enroll successfully for course : " + courseCode;
 
     }
 

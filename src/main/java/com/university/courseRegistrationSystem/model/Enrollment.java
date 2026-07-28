@@ -45,7 +45,7 @@ public class Enrollment {
             this.status = EnrollmentStatus.ACTIVE;
         }
     }
-    // helper method used when to change status of enrollments to DROPPED.
+    // helper method used when to change status of enrollments toDROPPED.
     public void drop() {
         this.status = EnrollmentStatus.DROPPED;
     }

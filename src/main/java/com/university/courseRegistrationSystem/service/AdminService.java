@@ -83,8 +83,8 @@ public class AdminService {
             message += (this.updateCreditHours(code,request.getCreditHours()) + ", ");
         }
 
-        if(request.getProfessorEmail() != null){
-            message += (this.updateProfessorForCourse(code, request.getProfessorEmail()));
+        if(request.getProfessorId() != null){
+            message += (this.updateProfessorForCourse(code, request.getProfessorId()));
         }
 
         if(message.isEmpty()){
@@ -117,10 +117,10 @@ public class AdminService {
     }
 
     @Transactional
-    public String updateProfessorForCourse(String code,String professorEmail) {
+    public String updateProfessorForCourse(String code,Long professorId) {
 
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found with code :" + code));
-        Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorEmail));
+        Professor professor = professorRepository.findById(professorId).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorId));
         course.setProfessor(professor);
         courseRepository.save(course);
         return "Professor updated successfully for course code : " + course.getCode();

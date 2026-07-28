@@ -66,8 +66,8 @@ public class ProfessorService {
 
         return enrollments.stream()
                 .map(e -> new StudentEnrollmentResponse(
-                        e.getStudent().getEmail(),
                         e.getStudent().getName(),
+                        e.getStudent().getEmail(),
                         course.getName(),
                         e.getEnrollmentDate(),
                         e.getStatus()
