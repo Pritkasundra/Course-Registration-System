@@ -44,8 +44,7 @@ public class ProfessorController {
     // PATCH professors/courses/{course-code}/cgpa-criteria/{minCgpaRequired}
     // professor updates minimum CGPA required for their course
 
-    @PatchMapping("/courses/{courseCode}/cgpa-criteria/{minCgpaRequired}")
-
+    @PatchMapping("/courses/{course-code}/cgpa-criteria/{minCgpaRequired}")
     public ResponseEntity<String> updateCgpaCriteria(
             @PathVariable("course-code") String courseCode,
             @PathVariable BigDecimal minCgpaRequired) {
