@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class CourseUpdateRequest {
     private Integer seats;
-    private String professorEmail;
+    private Long professorId;
     private Boolean isCoreFlag;
     private Integer creditHours;
 }

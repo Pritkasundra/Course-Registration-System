@@ -3,7 +3,6 @@ package com.university.courseRegistrationSystem.service;
 import com.university.courseRegistrationSystem.dto.AuthResponse;
 import com.university.courseRegistrationSystem.dto.LoginRequest;
 import com.university.courseRegistrationSystem.model.User;
-import com.university.courseRegistrationSystem.repository.UserRepository;
 import com.university.courseRegistrationSystem.security.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +58,7 @@ public class StudentService{
         );
     }
 
-    public List<Course> getEligibleCourses(){
+    public List<CourseResponse> getEligibleCourses(){
 
         Student student = getCurrentStudent();
 
@@ -68,7 +67,10 @@ public class StudentService{
         String semester = student.getSemester() != null ? student.getSemester() : null;
         int year = student.getYear();
 
-        return new ArrayList<>(courseRepository.findEligibleCourse(cgpa, semester, year));
+        return courseRepository.findEligibleCourse(cgpa, semester, year)
+                .stream()
+                .map(this::toCourseResponse)
+                .collect(Collectors.toList());
     }
 
     public List<EnrollmentResponse> getRegisteredCourses() {
@@ -114,7 +116,7 @@ public class StudentService{
         Enrollment enrollment = new Enrollment(student, course);
         Enrollment saved = enrollmentRepository.save(enrollment);
 
-        return "You Enroll successfully for course : " + saved.getId();
+        return "You Enroll successfully for course : " + courseCode;
 
     }
 
@@ -161,6 +163,22 @@ public class StudentService{
                 course.getProfessor() != null
                         ? course.getProfessor().getEmail()
                         : null
+        );
+    }
+
+    private CourseResponse toCourseResponse(Course course) {
+        return new CourseResponse(
+                course.getId(),
+                course.getName(),
+                course.getCode(),
+                course.getTotalSeats(),
+                course.getAvailableSeats(),
+                course.getCreditHours(),
+                course.isCoreFlag(),
+                course.getMinCgpaRequired(),
+                course.getProfessor() != null ? course.getProfessor().getId() : null,
+                course.getSemester(),
+                course.getYear()
         );
     }
 }

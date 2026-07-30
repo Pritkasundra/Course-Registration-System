@@ -8,7 +8,7 @@ import com.university.courseRegistrationSystem.repository.CourseRepository;
 import com.university.courseRegistrationSystem.repository.ProfessorRepository;
 import com.university.courseRegistrationSystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +32,15 @@ public class AdminService {
 
         Professor professor = professorRepository.findByEmail(request.getProfessorEmail()).orElseThrow(() -> new RuntimeException("Professor not found with email : " + request.getProfessorEmail()));
 
+        Course course = getCourse(request, professor);
+
+        courseRepository.save(course);
+
+        return "Course added successfully";
+
+    }
+
+    private static @NonNull Course getCourse(CourseRequest request, Professor professor) {
         Course course = new Course();
         course.setCode(request.getCode());
         course.setName(request.getName());
@@ -41,11 +50,9 @@ public class AdminService {
         course.setCoreFlag(request.isCoreFlag());
         course.setCreditHours(request.getCreditHours());
         course.setMinCgpaRequired(request.getMinCgpaRequired());
-
-        courseRepository.save(course);
-
-        return "Course added successfully";
-
+        course.setSemester(request.getSemester());
+        course.setYear(request.getYear());
+        return course;
     }
 
     @Transactional
@@ -76,8 +83,8 @@ public class AdminService {
             message += (this.updateCreditHours(code,request.getCreditHours()) + ", ");
         }
 
-        if(request.getProfessorEmail() != null){
-            message += (this.updateProfessorForCourse(code, request.getProfessorEmail()));
+        if(request.getProfessorId() != null){
+            message += (this.updateProfessorForCourse(code, request.getProfessorId()));
         }
 
         if(message.isEmpty()){
@@ -110,10 +117,10 @@ public class AdminService {
     }
 
     @Transactional
-    public String updateProfessorForCourse(String code,String professorEmail) {
+    public String updateProfessorForCourse(String code,Long professorId) {
 
         Course course = courseRepository.findByCode(code).orElseThrow(() -> new CustomException(400,"Course not found with code :" + code));
-        Professor professor = professorRepository.findByEmail(professorEmail).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorEmail));
+        Professor professor = professorRepository.findById(professorId).orElseThrow(() -> new CustomException(400,"Professor not found with id : " + professorId));
         course.setProfessor(professor);
         courseRepository.save(course);
         return "Professor updated successfully for course code : " + course.getCode();

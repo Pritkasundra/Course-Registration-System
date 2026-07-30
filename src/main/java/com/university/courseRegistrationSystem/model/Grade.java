@@ -39,7 +39,7 @@ public class Grade {
     // gradePoints is derived from letterGrade
     // A=4.0, B=3.0, C=2.0, D=1.0, F=0.0
 
-    @Column(precision = 3, scale = 2, nullable = false)
+    @Column(precision = 3, scale = 2, nullable = true)
     private BigDecimal gradePoints;
 
     @Column(nullable = false)

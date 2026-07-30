@@ -1,10 +1,6 @@
 package com.university.courseRegistrationSystem.controller;
 
-import com.university.courseRegistrationSystem.dto.CourseResponse;
-import com.university.courseRegistrationSystem.dto.EnrollmentResponse;
-import com.university.courseRegistrationSystem.dto.GradeResponse;
-import com.university.courseRegistrationSystem.dto.StudentProfileResponse;
-import com.university.courseRegistrationSystem.model.Course;
+import com.university.courseRegistrationSystem.dto.*;
 import com.university.courseRegistrationSystem.service.GradeService;
 import com.university.courseRegistrationSystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/students")
 @RequiredArgsConstructor
 
 
@@ -23,43 +19,43 @@ public class StudentController {
     private final StudentService studentService;
     private final GradeService gradeService;
 
-    // GET /student/profile
+    // GET /students/profile
     // Students view their own profile
     @GetMapping("/profile")
     public ResponseEntity<StudentProfileResponse> getProfile(){
         return ResponseEntity.ok(studentService.getProfile());
     }
 
-    // GET /student/courses/eligible
+    // GET /students/courses/eligible
     // Student see list of all eligible course
     @GetMapping("/courses/eligible")
-    public ResponseEntity<List<Course>> getEligibleCourses(){
+    public ResponseEntity<List<CourseResponse>> getEligibleCourses(){
         return ResponseEntity.ok(studentService.getEligibleCourses());
     }
 
-    // POST /student/enroll/{courseCode}
+    // POST /students/enrollments
     // student registers for a course
-    @PostMapping("/enroll/{courseCode}")
-    public ResponseEntity<String> enrollCourse(@PathVariable String courseCode){
-        return ResponseEntity.ok(studentService.enrollCourse(courseCode));
+    @PostMapping("/enrollments")
+    public ResponseEntity<String> enrollCourse(@RequestBody EnrollmentRequest enrollmentRequest){
+        return ResponseEntity.ok(studentService.enrollCourse(enrollmentRequest.getCourseCode()));
     }
 
-    // GET /student/enrollments
+    // GET /students/enrollments
     // student views all their currently active enrollments
     @GetMapping("/enrollments")
     public ResponseEntity<List<EnrollmentResponse>> getRegisteredCourses() {
         return ResponseEntity.ok(studentService.getRegisteredCourses());
     }
 
-    // DELETE /student/enrollments/{courseId}
+    // DELETE /students/enrollments
     // student drops a course
-    @DeleteMapping("/drop/{courseCode}")
-    public ResponseEntity<String> dropCourse(@PathVariable String courseCode) {
+    @DeleteMapping("/enrollments")
+    public ResponseEntity<String> dropCourse(@RequestBody EnrollmentRequest enrollmentRequest) {
 
-        return ResponseEntity.ok(studentService.dropCourse(courseCode));
+        return ResponseEntity.ok(studentService.dropCourse(enrollmentRequest.getCourseCode()));
     }
 
-    // GET /student/grades
+    // GET /students/grades
     // student views all grades across all semesters
     @GetMapping("/grades")
     public ResponseEntity<List<GradeResponse>> getAllGrades() {

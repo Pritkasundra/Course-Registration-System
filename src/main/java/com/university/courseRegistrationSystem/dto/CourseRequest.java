@@ -13,6 +13,8 @@ public class CourseRequest {
     private int totalSeats;
     private int creditHours;
     private boolean isCoreFlag;
+    private String semester;
+    private Integer year;
     private BigDecimal minCgpaRequired;
     private String professorEmail;
 }

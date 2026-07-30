@@ -2,12 +2,8 @@ package com.university.courseRegistrationSystem.config;
 
 import com.university.courseRegistrationSystem.security.JWTFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,9 +25,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/professor/**").hasAuthority("PROFESSOR")
-                        .requestMatchers("/student/**").hasAuthority("STUDENT")
+                        .requestMatchers("/admins/**").hasAuthority("ADMIN")
+                        .requestMatchers("/professors/**").hasAuthority("PROFESSOR")
+                        .requestMatchers("/students/**").hasAuthority("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
