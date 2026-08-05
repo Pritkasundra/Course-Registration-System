@@ -120,38 +120,38 @@ Authorization: Bearer <your_token_here>
 
 ### Admin APIs
 
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| POST | `/admin/course` | Add a new course | Admin |
-| GET | `/admin/courses` | View all courses | Admin |
-| GET | `/admin/students` | View all students | Admin |
-| PUT | `/admin/courses/{code}` | Update a Course | Admin |
-| DELETE | `/admin/courses/{code}` | Delete a Course | Admin |
+| Method | Endpoint                        | Description | Access |
+|---|---------------------------------|---|---|
+| POST | `/admins/courses`               | Add a new course | Admin |
+| GET | `/admins/courses`               | View all courses | Admin |
+| GET | `/admins/students`              | View all students | Admin |
+| PUT | `/admins/courses/{course-code}` | Update a Course | Admin |
+| DELETE | `/admins/courses/{course-code}` | Delete a Course | Admin |
 
 ---
 
 ### Professor APIs
 
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| GET | `/professor/courses` | View assigned courses | Professor |
-| GET | `/professor/courses/{courseId}/students` | View enrolled students | Professor |
-| POST | `/professor/grades` | Assign grade to a student | Professor |
-| PUT | `/professor/courses/{courseId}/cgpa-criteria` | Update minimum CGPA requirement | Professor |
+| Method | Endpoint                                         | Description | Access |
+|---|--------------------------------------------------|---|---|
+| GET | `/professors/courses`                            | View assigned courses | Professor |
+| GET | `/professors/courses/{course-code}/students`     | View enrolled students | Professor |
+| POST | `/professors/grades`                             | Assign grade to a student | Professor |
+| PUT | `/professor/courses/{course-code}/cgpa-criteria` | Update minimum CGPA requirement | Professor |
 
 ---
 
 ### Student APIs
 
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| GET | `/student/profile` | View own profile and credit info | Student |
-| GET | `/student/courses/eligible` | View all eligible courses | Student |
-| POST | `/student/enroll/{courseCode}` | Enroll in a course | Student |
-| GET | `/student/enrollments` | View registered courses | Student |
-| DELETE | `/student/drop/{courseCode}` | Drop a course | Student |
-| GET | `/student/grades` | View all grades | Student |
-| GET | `/student/grades/{semester}` | View grades by semester | Student |
+| Method | Endpoint                      | Description | Access |
+|---|-------------------------------|---|---|
+| GET | `/students/profile`           | View own profile and credit info | Student |
+| GET | `/students/courses/eligible`  | View all eligible courses | Student |
+| POST | `/students/enrollments`       | Enroll in a course | Student |
+| GET | `/students/enrollments`       | View registered courses | Student |
+| DELETE | `/students/enrollments`       | Drop a course | Student |
+| GET | `/students/grades`            | View all grades | Student |
+| GET | `/students/grades/{semester}` | View grades by semester | Student |
 
 ---
 
@@ -195,13 +195,18 @@ Content-Type: application/json
 
 ### Enroll in Course (Student)
 ```
-POST /student/enroll/CS301
+POST /students/enrollments
 Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+    "courseCode" : "CS201"
+}
 ```
 
 ### Grade a Student (Professor)
 ```
-POST /professor/grades
+POST /professors/grades
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -286,7 +291,6 @@ Course-Registration-System/
                     ├── AdminService.java
                     ├── AuthService.java
                     ├── CustomUserDetailsService.java  # Spring Security user loader
-                    ├── EnrollmentService.java
                     ├── GradeService.java
                     ├── ProfessorService.java
                     └── StudentService.java
