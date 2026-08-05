@@ -28,6 +28,7 @@ public class Course {
     @Column(nullable = false, unique = true)
     private String code;
 
+    private boolean active = true;
 
     private int totalSeats;
 

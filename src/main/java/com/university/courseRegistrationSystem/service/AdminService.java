@@ -63,7 +63,8 @@ public class AdminService {
 
         // just delete — CascadeType.ALL on enrollments and grades
         // will automatically delete related enrollment and grade records
-        courseRepository.delete(course);
+        course.setActive(false);
+        courseRepository.save(course);
         return "Course deleted successfully";
     }
 
